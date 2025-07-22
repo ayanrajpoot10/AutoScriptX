@@ -1,0 +1,13 @@
+[sshd]
+enabled = true
+port    = ssh
+filter  = sshd
+logpath = /var/log/auth.log
+maxretry = 5
+
+[dropbear]
+enabled = true
+port    = 143,109,69
+filter  = dropbear
+logpath = /var/log/auth.log
+maxretry = 5
