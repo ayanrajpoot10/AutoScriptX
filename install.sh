@@ -206,4 +206,10 @@ history -c && echo "unset HISTFILE" >> /etc/profile
 log_success "Final cleanup done."
 
 
+for link in autoscriptx asx; do
+  ln -sf /usr/bin/menu /usr/bin/$link
+  chmod +x /usr/bin/$link
+done
+
 log_success "Installation complete."
+log_success "Type 'autoscriptx' or 'asx' to launch the script."
