@@ -10,9 +10,9 @@ NC="\033[0m"
 BASE_URL="https://raw.githubusercontent.com/ayanrajpoot10/AutoScriptX/master"
 
 
-log_info()    { echo -e "${BLUE}[ Info ]${NC} $1"; }
+log_info()    { echo -e "${BLUE}[ Info    ]${NC} $1"; }
 log_success() { echo -e "${GREEN}[ Success ]${NC} $1"; }
-log_error()   { echo -e "${RED}[ Error ]${NC} $1"; }
+log_error()   { echo -e "${RED}[ Error   ]${NC} $1"; }
 log_warning() { echo -e "${YELLOW}[ Warning ]${NC} $1"; }
 
 export DEBIAN_FRONTEND=noninteractive
@@ -35,6 +35,11 @@ echo "---------------------------"
 echo "      VPS DOMAIN SETUP     "
 echo "---------------------------"
 read -rp "Enter Your Domain: " domain
+clear
+if [[ -z "$domain" ]]; then
+    log_error "Domain cannot be empty."
+    exit 1
+fi
 if echo "$domain" > /etc/AutoScriptX/domain; then
     log_success "Domain saved."
 else
@@ -43,21 +48,33 @@ else
 fi
 
 
-log_info "Updating system and removing unwanted packages..."
+log_info "Updating system..."
 apt update -y > /dev/null 2>&1 && apt dist-upgrade -y > /dev/null 2>&1
 if [[ $? -ne 0 ]]; then log_error "System update failed."; exit 1; fi
 apt-get purge -y ufw firewalld exim4 samba* apache2* bind9* sendmail* unscd > /dev/null 2>&1 || log_warning "Some packages could not be purged (may not be installed)."
 apt autoremove -y > /dev/null 2>&1 && apt autoclean -y > /dev/null 2>&1
-log_success "System updated and unwanted packages removed."
+log_success "System updated."
 
 
-log_info "Installing essential packages..."
+log_info "Installing packages..."
 apt install -y \
   netfilter-persistent screen curl jq bzip2 gzip vnstat coreutils rsyslog \
   zip unzip net-tools nano lsof shc gnupg dos2unix dirmngr bc \
   stunnel4 nginx dropbear socat xz-utils sshguard > /dev/null 2>&1
-if [[ $? -ne 0 ]]; then log_error "Failed to install one or more essential packages."; exit 1; fi
-log_success "Essential packages installed."
+if [[ $? -ne 0 ]]; then log_error "Failed to install one or more packages."; exit 1; fi
+log_success "Packages installed."
+
+
+log_info "Installing gum..."
+wget -qO- https://github.com/charmbracelet/gum/releases/download/v0.16.2/gum_0.16.2_Linux_x86_64.tar.gz | \
+  tar -xz -C /usr/local/bin --strip-components=1 --wildcards '*/gum'
+if [[ -f /usr/local/bin/gum ]]; then
+  chmod +x /usr/local/bin/gum
+  log_success "gum installed."
+else
+  log_error "Failed to install gum."
+  exit 1
+fi
 
 
 log_info "Disabling IPv6..."
@@ -77,16 +94,16 @@ echo -e "/bin/false\n/usr/sbin/nologin" >> /etc/shells
 log_success "Dropbear configured."
 
 
-log_info "Setting up WebSocket-SSH service..."
+log_info "Setting up SSH-WebSocket service..."
 wget -O /usr/local/bin/ws-proxy "$BASE_URL/bin/ws-proxy" > /dev/null 2>&1 && chmod +x /usr/local/bin/ws-proxy || log_warning "Failed to install websocket proxy"
 wget -O /etc/systemd/system/ws-proxy.service "$BASE_URL/service/systemd/ws-proxy.service" > /dev/null 2>&1 && chmod +x /etc/systemd/system/ws-proxy.service || log_warning "Failed to install websocket proxy service"
 systemctl daemon-reload > /dev/null 2>&1
 systemctl enable ws-proxy.service > /dev/null 2>&1
 systemctl restart ws-proxy.service > /dev/null 2>&1 || log_warning "Failed to restart ws-proxy.service."
-log_success "WebSocket-SSH service set up."
+log_success "SSH-WebSocket service set up."
 
 
-log_info "Setting up SSL certificate with acme.sh..."
+log_info "Requesting SSL cert..."
 mkdir -p /root/.acme.sh
 curl -s https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh || log_error "Failed to download acme.sh."
 chmod +x /root/.acme.sh/acme.sh
@@ -96,7 +113,7 @@ chmod +x /root/.acme.sh/acme.sh
 /root/.acme.sh/acme.sh --installcert -d "$domain" \
   --fullchainpath /etc/AutoScriptX/cert.crt \
   --keypath /etc/AutoScriptX/cert.key --ecc > /dev/null 2>&1 || log_error "acme.sh certificate install failed."
-log_success "SSL certificate set up with acme.sh."
+log_success "SSL cert installed."
 
 
 log_info "Setting up Nginx..."
@@ -197,5 +214,6 @@ for link in autoscriptx asx; do
   chmod +x /usr/bin/$link
 done
 
+
 log_success "Installation complete."
-log_success "Type 'autoscriptx' or 'asx' to launch the script."
+log_success "Run '${GREEN}autoscriptx${NC}' or '${GREEN}asx${NC}' to start."

@@ -5,11 +5,11 @@ PORT_INFO="/etc/AutoScriptX/port-info.json"
 
 gum format --theme dracula --type markdown "# 🛠️ Create SSH Account"
 
-echo -ne "\e[38;5;212m👤 Username:\e[0m "
+echo -ne "\e[38;5;212m  👤 Username:\e[0m "
 read -r username
-echo -ne "\e[38;5;212m🔑 Password:\e[0m "
+echo -ne "\e[38;5;212m  🔑 Password:\e[0m "
 read -r password
-echo -ne "\e[38;5;212m📅 Expired (days):\e[0m "
+echo -ne "\e[38;5;212m  📅 Expired (days):\e[0m "
 read -r expire_days
 
 public_ip=$(curl -s ifconfig.me)
