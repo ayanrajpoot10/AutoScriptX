@@ -16,8 +16,7 @@ done < /etc/passwd
 
 if [ ${#EXPIRED_USERS[@]} -eq 0 ]; then
   gum format --type markdown <<< "**✅ No expired users found.**"
-  read -n 1 -s -r -p $'\033[1;33mPress any key to return to menu...\033[0m'
-  exit 0
+  gum confirm "Return to menu?" && menu
 fi
 
 gum format --theme dracula --type markdown <<EOF

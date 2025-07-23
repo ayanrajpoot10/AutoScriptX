@@ -4,6 +4,8 @@ BANNER_FILE="/etc/AutoScriptX/banner"
 
 sudo cp "$BANNER_FILE" "${BANNER_FILE}.bak"
 
+gum format --theme dracula --type markdown "# 🪄 Edit SSH Banner"
+
 if [ -s "$BANNER_FILE" ]; then
     CURRENT_CONTENT=$(cat "$BANNER_FILE")
 else

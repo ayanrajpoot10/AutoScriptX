@@ -4,6 +4,8 @@ SERVICE_FILE="/etc/systemd/system/ws-proxy.service"
 
 old_res=$(grep ExecStart "$SERVICE_FILE" | sed -n 's/.*--res "\(.*\)".*/\1/p')
 
+gum format --theme dracula --type markdown "# ✨ Edit 101 Response"
+
 [ -z "$old_res" ] && old_res="Switching Protocols"
 
 new_res=$(echo "$old_res" | gum write --placeholder "Write message to show after http/1.1 101 ")
