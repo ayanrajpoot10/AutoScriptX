@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BANNER_FILE="/etc/issue.net"
+BANNER_FILE="/etc/AutoScriptX/banner"
 
 sudo cp "$BANNER_FILE" "${BANNER_FILE}.bak"
 

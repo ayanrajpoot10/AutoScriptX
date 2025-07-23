@@ -67,25 +67,11 @@ sysctl --system > /dev/null 2>&1 || log_warning "Failed to reload sysctl setting
 log_success "IPv6 disabled."
 
 
-log_info "Configuring SSH..."
-sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-for port in 22 200; do
-  if ! grep -q "^Port $port" /etc/ssh/sshd_config; then
-    echo "Port $port" >> /etc/ssh/sshd_config
-  fi
-done
-wget -qO /etc/issue.net "$BASE_URL/config/banner.conf" || log_warning "Failed to download SSH banner."
-chmod 644 /etc/issue.net
-if ! grep -q '^Banner /etc/issue.net' /etc/ssh/sshd_config; then
-  echo 'Banner /etc/issue.net' >> /etc/ssh/sshd_config
-fi
-/etc/init.d/ssh restart > /dev/null 2>&1 || log_warning "Failed to restart SSH."
-log_success "SSH configured."
-
-
 log_info "Configuring Dropbear..."
 wget -qO /etc/default/dropbear "$BASE_URL/config/dropbear.conf" || log_error "Failed to download dropbear.conf."
 chmod 644 /etc/default/dropbear
+wget -qO /etc/AutoScriptX/banner "$BASE_URL/config/banner.conf" || log_warning "Failed to download Dropbear banner."
+chmod 644 /etc/AutoScriptX/banner
 echo -e "/bin/false\n/usr/sbin/nologin" >> /etc/shells
 /etc/init.d/dropbear restart > /dev/null 2>&1 || log_warning "Failed to restart Dropbear."
 log_success "Dropbear configured."
