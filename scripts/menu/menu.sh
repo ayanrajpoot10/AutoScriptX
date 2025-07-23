@@ -43,7 +43,7 @@ case "$opt" in
   "1. Create Account") create-account ;;
   "2. Delete Account") delete-account ;;
   "3. Renew Account") renew-account ;;
-  "4. Lock/Unlock Account") lock-unlcok ;;
+  "4. Lock/Unlock Account") lock-unlock ;;
   "5. Edit Banner") edit-banner ;;
   "6. Edit 101 Response") edit-response ;;
   "7. Change Domain") change-domain ;;
