@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-gum format --theme gracula --type markdown "🔐 Toggle Account Status"
+gum format --theme dracula --type markdown "🔐 Toggle Account Status"
 
 users=$(awk -F: '$3 > 1000 && $1 != "nobody" {print $1}' /etc/passwd)
 

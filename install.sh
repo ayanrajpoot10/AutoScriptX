@@ -54,9 +54,8 @@ log_success "System updated and unwanted packages removed."
 log_info "Installing essential packages..."
 apt install -y \
   netfilter-persistent screen curl jq bzip2 gzip vnstat coreutils rsyslog \
-  zip unzip python3 net-tools nano lsof shc \
-  sed gnupg bc dirmngr dos2unix fail2ban \
-  wget stunnel4 nginx dropbear socat xz-utils > /dev/null 2>&1
+  zip unzip net-tools nano lsof shc gnupg dos2unix dirmngr bc \
+  stunnel4 nginx dropbear socat xz-utils sshguard > /dev/null 2>&1
 if [[ $? -ne 0 ]]; then log_error "Failed to install one or more essential packages."; exit 1; fi
 log_success "Essential packages installed."
 
@@ -75,7 +74,7 @@ for port in 22 200; do
     echo "Port $port" >> /etc/ssh/sshd_config
   fi
 done
-wget -qO /etc/issue.net "$BASE_URL/config/config.conf" || log_warning "Failed to download SSH banner."
+wget -qO /etc/issue.net "$BASE_URL/config/banner.conf" || log_warning "Failed to download SSH banner."
 chmod 644 /etc/issue.net
 if ! grep -q '^Banner /etc/issue.net' /etc/ssh/sshd_config; then
   echo 'Banner /etc/issue.net' >> /etc/ssh/sshd_config
@@ -85,9 +84,8 @@ log_success "SSH configured."
 
 
 log_info "Configuring Dropbear..."
-sed -i 's/NO_START=1/NO_START=0/' /etc/default/dropbear
-sed -i 's/DROPBEAR_PORT=22/DROPBEAR_PORT=143/' /etc/default/dropbear
-sed -i 's|DROPBEAR_EXTRA_ARGS=.*|DROPBEAR_EXTRA_ARGS="-p 109 -p 69 -b /etc/issue.net"|' /etc/default/dropbear
+wget -qO /etc/default/dropbear "$BASE_URL/config/dropbear.conf" || log_error "Failed to download dropbear.conf."
+chmod 644 /etc/default/dropbear
 echo -e "/bin/false\n/usr/sbin/nologin" >> /etc/shells
 /etc/init.d/dropbear restart > /dev/null 2>&1 || log_warning "Failed to restart Dropbear."
 log_success "Dropbear configured."
@@ -102,6 +100,19 @@ systemctl restart ws-proxy.service > /dev/null 2>&1 || log_warning "Failed to re
 log_success "WebSocket-SSH service set up."
 
 
+log_info "Setting up SSL certificate with acme.sh..."
+mkdir -p /root/.acme.sh
+curl -s https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh || log_error "Failed to download acme.sh."
+chmod +x /root/.acme.sh/acme.sh
+/root/.acme.sh/acme.sh --upgrade --auto-upgrade > /dev/null 2>&1
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt > /dev/null 2>&1
+/root/.acme.sh/acme.sh --issue -d "$domain" --standalone -k ec-256 > /dev/null 2>&1 || log_error "acme.sh certificate issue failed."
+/root/.acme.sh/acme.sh --installcert -d "$domain" \
+  --fullchainpath /etc/AutoScriptX/cert.crt \
+  --keypath /etc/AutoScriptX/cert.key --ecc > /dev/null 2>&1 || log_error "acme.sh certificate install failed."
+log_success "SSL certificate set up with acme.sh."
+
+
 log_info "Setting up Nginx..."
 rm -f /etc/nginx/{sites-available/default,sites-enabled/default,conf.d/default.conf}
 mkdir -p /home/vps/public_html
@@ -109,7 +120,7 @@ mkdir -p /etc/systemd/system/nginx.service.d
 files=(
   "nginx.conf:/etc/nginx/nginx.conf"
   "reverse-proxy.conf:/etc/nginx/conf.d/reverse-proxy.conf"
-  "real_ip_source.conf:/etc/nginx/conf.d/real_ip_source.conf"
+  "real_ip_sources.conf:/etc/nginx/conf.d/real_ip_sources.conf"
 )
 for f in "${files[@]}"; do
     name="${f%%:*}"
@@ -122,19 +133,6 @@ done
 systemctl daemon-reload > /dev/null 2>&1
 systemctl restart nginx > /dev/null 2>&1 || log_error "Failed to restart Nginx."
 log_success "Nginx set up."
-
-
-log_info "Setting up SSL certificate with acme.sh..."
-mkdir -p /root/.acme.sh
-curl -s https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh || log_error "Failed to download acme.sh."
-chmod +x /root/.acme.sh/acme.sh
-/root/.acme.sh/acme.sh --upgrade --auto-upgrade > /dev/null 2>&1
-/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt > /dev/null 2>&1
-/root/.acme.sh/acme.sh --issue -d "$domain" --standalone -k ec-256 > /dev/null 2>&1 || log_error "acme.sh certificate issue failed."
-/root/.acme.sh/acme.sh --installcert -d "$domain" \
-  --fullchainpath /etc/AutoScriptX/cert.crt \
-  --keypath /etc/AutoScriptX/cert.key --ecc > /dev/null 2>&1 || log_error "acme.sh certificate install failed."
-log_success "SSL certificate set up with acme.sh."
 
 
 log_info "Setting up BadVPN..."
@@ -159,11 +157,10 @@ systemctl restart stunnel4 > /dev/null 2>&1 || log_warning "Failed to restart st
 log_success "Stunnel configured."
 
 
-log_info "Configuring Fail2Ban..."
-wget -qO /etc/fail2ban/jail.local "$BASE_URL/service/fail2ban/jail.local" || log_error "Failed to download jail.local."
-systemctl enable fail2ban > /dev/null 2>&1
-systemctl restart fail2ban > /dev/null 2>&1 || log_warning "Failed to restart fail2ban."
-log_success "Fail2Ban configured."
+log_info "Configuring SSHGuard..."
+systemctl enable sshguard > /dev/null 2>&1
+systemctl restart sshguard > /dev/null 2>&1 || log_warning "Failed to restart sshguard."
+log_success "SSHGuard configured."
 
 
 log_info "Applying firewall rules to block torrent traffic..."
@@ -183,7 +180,7 @@ log_success "Firewall rules applied to block torrent traffic."
 log_info "Installing scripts..."
 declare -A script_dirs=(
   [menu]="menu.sh"
-  [ssh]="create-account.sh delete-account.sh edit-banner.sh lock-unlock.sh renew-account.sh"
+  [ssh]="create-account.sh delete-account.sh edit-banner.sh edit-response lock-unlock.sh renew-account.sh"
   [system]="change-domain.sh manage-services.sh system-info.sh clean-expired-accounts.sh"
 )
 for dir in "${!script_dirs[@]}"; do

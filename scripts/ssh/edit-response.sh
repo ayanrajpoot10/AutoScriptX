@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVICE_FILE="/etc/systemd/system/ws-go-proxy.service"
+SERVICE_FILE="/etc/systemd/system/ws-proxy.service"
 
 old_res=$(grep ExecStart "$SERVICE_FILE" | sed -n 's/.*--res "\(.*\)".*/\1/p')
 
