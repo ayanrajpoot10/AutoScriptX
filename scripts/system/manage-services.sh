@@ -22,14 +22,18 @@ gum format --theme dracula --type markdown "# ⚙️ Service Status"
 
 for service in "${!services[@]}"; do
   status=$(check_status "$service")
-  printf "  - **%-18s** : %s\n" "${services[$service]}" "$status"
+  printf "  • %-18s : %s\n" "${services[$service]}" "$status"
 done
 
 echo
 
-selected_services=$(printf "%s\n" "${!services[@]}" | gum choose --no-limit --height=12 --header="Select one or more services to manage")
 
-[[ -z "$selected_services" ]] && exit 0
+selected_services=$(printf "%s\n" "${!services[@]}" | gum choose --no-limit --height=12 --header="Use SPACE or X to select")
+
+if [[ -z "$selected_services" ]]; then
+  gum style --foreground 1 "No service selected. Exiting."
+  exit 0
+fi
 
 action=$(gum choose "start" "stop" "restart" --header="What do you want to do with selected service(s)?")
 

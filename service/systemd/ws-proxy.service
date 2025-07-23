@@ -1,6 +1,6 @@
 [Unit]
 Description=SSH Over Websocket (Go Proxy)
-Documentation=https://google.com
+Documentation=https://github.com/ayanrajpoot10/AutoScriptX
 After=network.target nss-lookup.target
 
 [Service]

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$(id -u)" -ne 0 ]; then
+  gum style --foreground "#ff5555" --border double --margin "1 2" --padding "1 2" "🚫 Please run this script as root."
+  exit 1
+fi
+
 os_name=$(hostnamectl | grep 'Operating System' | cut -d ':' -f2- | xargs)
 uptime=$(uptime -p | cut -d " " -f 2-10)
 public_ip=$(curl -s ifconfig.me)
@@ -11,7 +16,7 @@ clear
 
 gum format --theme dracula <<EOF
 
-# 🖥️ VPS Information
+# 🚀 AutoScriptX - VPS Manager
 
 - **OS**         : $os_name  
 - **Uptime**     : $uptime  
@@ -26,7 +31,7 @@ gum format --theme dracula <<EOF
 # 📋 Main Menu
 EOF
 
-opt=$(gum choose --limit=1 --header " Choose" \
+opt=$(gum choose --limit=1 --header "  Choose" \
   "1. Create Account" \
   "2. Delete Account" \
   "3. Renew Account" \

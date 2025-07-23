@@ -16,12 +16,15 @@ while IFS= read -r user; do
 done <<< "$users"
 
 if [[ ${#entries[@]} -eq 0 ]]; then
-  gum style --foreground 1 "❌ No regular user accounts found."
-  exit 1
+  gum style --foreground 1 "No accounts found."
+  gum confirm "Return to menu?" && menu
 fi
 
 selected=$(printf "%s\n" "${entries[@]}" | gum choose --height 20 --no-limit)
-[[ -z "$selected" ]] && exit 0
+if [[ -z "$selected" ]]; then
+  gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
+  exit 1
+fi
 
 user=$(echo "$selected" | awk '{print $2}')
 status=$(echo "$selected" | awk '{print $1}')

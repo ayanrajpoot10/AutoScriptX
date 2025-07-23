@@ -4,7 +4,11 @@ gum format --theme dracula --type markdown "# 🌐 Change Domain"
 
 echo -ne "\e[38;5;212m🌍 Domain:\e[0m "
 read -r domain
-[[ -z "$domain" ]] && echo -e "\e[38;5;196m❌ No domain entered. Exiting.\e[0m" && exit 1
+
+if [[ -z "$domain" ]]; then
+  gum style --foreground 1 "No domain entered. Exiting."
+  exit 1
+fi
 
 echo "$domain" > /etc/AutoScriptX/domain
 gum style --foreground 10 "✅ Domain set to: $domain"
@@ -20,7 +24,7 @@ echo -e "\e[38;5;220m🔑 Issuing SSL for $domain...\e[0m"
     --fullchainpath /etc/AutoScriptX/cert.crt \
     --keypath /etc/AutoScriptX/cert.key --ecc >/dev/null 2>&1
 
-[[ $? -ne 0 ]] && gum style --foreground 1 "❌ SSL certificate issue failed." && exit 1
+[[ $? -ne 0 ]] && gum style --foreground 1 " SSL certificate issue failed." && exit 1
 
 systemctl restart nginx >/dev/null 2>&1
 

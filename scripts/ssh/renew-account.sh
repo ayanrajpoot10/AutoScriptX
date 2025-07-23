@@ -15,21 +15,25 @@ while IFS=: read -r user _ uid _ _ _ _; do
 done < /etc/passwd
 
 if [ ${#EXPIRED_USERS[@]} -eq 0 ]; then
-  gum format --type markdown <<< "**✅ No expired users found.**"
+  gum style --foreground 1 "No expired accounts found."
   gum confirm "Return to menu?" && menu
 fi
 
-gum format --theme dracula --type markdown <<EOF
-# 🔄 Renew Expired User
+gum format --theme dracula --type markdown "# 🔄 Renew Expired Accounts"
 
-Select an expired user to renew access.
-EOF
+echo -e
+user=$(printf "%s\n" "${EXPIRED_USERS[@]}" | gum choose --height=10 --header="Use SPACE or X to select")
+if [ -z "$user" ]; then
+  gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
+  exit 1
+fi
 
-user=$(printf "%s\n" "${EXPIRED_USERS[@]}" | gum choose --height=10 --header="Select user to renew")
-[ -z "$user" ] && gum format --type markdown <<< "**❌ No user selected.**" && exit 1
-
-days=$(gum input --placeholder "Enter number of days to extend (e.g. 7)")
-[[ ! "$days" =~ ^[0-9]+$ ]] && gum format --type markdown <<< "**❌ Invalid number of days.**" && exit 1
+echo -ne "\e[38;5;212m📅 Enter number of days to extend (e.g. 7):\e[0m "
+read -r days
+if [[ ! "$days" =~ ^[0-9]+$ ]]; then
+  gum style --foreground 1 "Invalid number of days."
+  exit 1
+fi
 
 expire_date=$(date -u -d "+$days days" +%Y-%m-%d)
 expire_disp=$(date -u -d "+$days days" '+%d %b %Y')
@@ -38,7 +42,7 @@ sudo passwd -u "$user" &>/dev/null
 sudo usermod -e "$expire_date" "$user"
 
 gum format --theme dracula --type markdown <<EOF
-## ✅ User Renewed
+# ✅ Account Renewed
 
 **👤 Username**    : \`$user\`  
 **📅 Days Added**  : \`$days\`  

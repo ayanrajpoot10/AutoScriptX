@@ -11,7 +11,7 @@ gum format --theme dracula --type markdown "# ✨ Edit 101 Response"
 new_res=$(echo "$old_res" | gum write --placeholder "Write message to show after http/1.1 101 ")
 
 if [ -z "$new_res" ]; then
-    echo "❌ No value entered. Exiting."
+    gum style --foreground 1 "No response message entered. Exiting."
     exit 1
 fi
 

@@ -15,15 +15,20 @@ USER_LIST=$(awk -F: '$3 > 1000 && $1 != "nobody" { print $1 }' /etc/passwd | whi
   echo "$u"
 done)
 
-gum format --theme dracula --type markdown <<< "# 🧨 Delete SSH Users"
-if [ -z "$USER_LIST" ]; then
-  gum format --type markdown <<< "**❌ No SSH users available to delete.**"
-  exit 0
-fi
-SEL=$(echo -e "$USER_LIST" | gum choose --height=15 --no-limit --header="Select users to delete")
-[ -z "$SEL" ] && gum format --type markdown <<< "**❌ No users selected.**" && exit 0
+gum format --theme dracula --type markdown <<< "# 🧨 Delete SSH Accounts"
 
-gum confirm "Delete selected users?" || { gum format --type markdown <<< "**❎ Cancelled.**"; exit 0; }
+if [ -z "$USER_LIST" ]; then
+  gum style --foreground 1 "No SSH Account available to delete."
+  gum confirm "Return to menu?" && menu
+fi
+echo -e
+SEL=$(echo -e "$USER_LIST" | gum choose --height=15 --no-limit --header="Use SPACE or X to select")
+if [ -z "$SEL" ]; then
+  gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
+  exit 1
+fi
+
+gum confirm "Delete selected accounts?" || { gum format --type markdown <<< "**❎ Cancelled.**"; exit 0; }
 
 COUNT=0
 while IFS= read -r u; do
@@ -33,6 +38,7 @@ while IFS= read -r u; do
   fi
 done <<< "$SEL"
 
-gum format --type markdown <<< "## 🧹 $COUNT Account(s) deleted**"
+gum format --type markdown <<< "# 🧹 $COUNT Account(s) deleted"
 
+echo -e
 gum confirm "Return to menu?" && menu

@@ -3,7 +3,6 @@
 DOMAIN_FILE="/etc/AutoScriptX/domain"
 PORT_INFO="/etc/AutoScriptX/port-info.json"
 
-
 gum format --theme dracula --type markdown "# 🛠️ Create SSH Account"
 
 echo -ne "\e[38;5;212m👤 Username:\e[0m "
@@ -22,7 +21,7 @@ echo -e "$password\n$password" | passwd "$username" &>/dev/null
 expire_date_str=$(chage -l "$username" | grep "Account expires" | cut -d: -f2 | xargs)
 
 gum format --theme dracula --type markdown <<EOF
-## ✅ SSH Account Created
+# ✅ SSH Account Created
 
 **👤 Username**    : \`$username\`  
 **🔑 Password**    : \`$password\`  
@@ -30,7 +29,7 @@ gum format --theme dracula --type markdown <<EOF
 **🌐 Public IP**   : $public_ip  
 **📡 Host**        : $domain  
 
-## 📦 Ports
+# 📦 Ports
 
 - OpenSSH     : 22 
 - SSH WS      : 80
@@ -38,9 +37,9 @@ gum format --theme dracula --type markdown <<EOF
 - SSL/TLS     : 443 
 - UDPGW       : 7200,7300
 
-## 🧪 Payloads
+# 🧪 Payloads
 
-**WSS Payload**  
+**WSS Payload**
 \`\`\`
 GET wss://example.com HTTP/1.1[crlf]
 Host: $domain[crlf]
