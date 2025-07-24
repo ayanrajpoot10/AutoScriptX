@@ -19,6 +19,7 @@ if [ -z "$NEW_BANNER" ] || [ "$NEW_BANNER" = "$CURRENT_CONTENT" ]; then
 else
     gum confirm "Do you want to save this as your new SSH banner?" && {
         echo "$NEW_BANNER" | sudo tee "$BANNER_FILE" > /dev/null
+        sudo systemctl restart dropbear >/dev/null 2>&1
         gum style --foreground 2 "✅ Banner updated successfully!"
     } || {
         gum style --foreground 2 "❎ Cancelled. No changes were made."
