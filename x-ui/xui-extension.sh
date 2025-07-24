@@ -12,16 +12,10 @@ XRAY_WATCHER_DST="$BIN_DIR/xray-watcher.sh"
 SERVICE_DST="$SYSTEMD_DIR/xray-watcher.service"
 GITHUB_RAW="https://raw.githubusercontent.com/ayanrajpoot10/AutoScriptX/master/x-ui"
 
-MISSING=()
-for cmd in sqlite3 jq inotify-tools; do
-  command -v "$cmd" &>/dev/null || MISSING+=("$cmd")
-done
-if [ ${#MISSING[@]} -gt 0 ]; then
-  echo "Installing missing dependencies: ${MISSING[*]}"
-  export DEBIAN_FRONTEND=noninteractive
-  apt-get update -qq
-  apt-get install -y -qq "${MISSING[@]}"
-fi
+echo "Installing dependencies"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq sqlite3 jq inotify-tools
 
 curl -fsSL "$GITHUB_RAW/add-location.sh" -o "$ADD_LOCATION_DST"
 curl -fsSL "$GITHUB_RAW/xray-watcher.sh" -o "$XRAY_WATCHER_DST"
