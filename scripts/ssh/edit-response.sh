@@ -10,9 +10,10 @@ gum format --theme dracula --type markdown "# ✨ Edit 101 Response"
 
 new_res=$(echo "$old_res" | gum write --placeholder "Write message to show after http/1.1 101 ")
 
-if [ -z "$new_res" ]; then
-    gum style --foreground 1 "No response message entered. Exiting."
-    exit 1
+if [ -z "$new_res" ] || [ "$new_res" = "$old_res" ]; then
+    gum style --foreground 1 "No changes detected. Response not updated."
+    echo -e
+    gum confirm "Return to menu?" && menu
 fi
 
 escaped_res=$(printf '%s\n' "$new_res" | sed 's/[&/\]/\\&/g' | tr '\n' ' ' | sed 's/ *$//')
@@ -25,4 +26,5 @@ systemctl restart ws-proxy.service
 
 gum style --foreground 212 "✅ 101 Response Updated:"
 
+echo -e
 gum confirm "Return to menu?" && menu

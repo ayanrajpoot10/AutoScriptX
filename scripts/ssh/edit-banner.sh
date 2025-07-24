@@ -14,17 +14,16 @@ fi
 
 NEW_BANNER=$(echo "$CURRENT_CONTENT" | gum write --width 60 --height 15 --placeholder "Edit SSH Banner")
 
-gum confirm "Do you want to save this as your new SSH banner?" && {
-
-if [ "$NEW_BANNER" = "$CURRENT_CONTENT" ]; then
-    echo "⚠️  No changes detected. Banner not updated."
+if [ -z "$NEW_BANNER" ] || [ "$NEW_BANNER" = "$CURRENT_CONTENT" ]; then
+    gum style --foreground 1 "No changes detected. Banner not updated."
 else
     gum confirm "Do you want to save this as your new SSH banner?" && {
         echo "$NEW_BANNER" | sudo tee "$BANNER_FILE" > /dev/null
-        echo "✅ Banner updated successfully!"
+        gum style --foreground 2 "✅ Banner updated successfully!"
     } || {
-        echo "❎ Cancelled. No changes were made."
+        gum style --foreground 2 "❎ Cancelled. No changes were made."
     }
 fi
 
+echo -e
 gum confirm "Return to menu?" && menu

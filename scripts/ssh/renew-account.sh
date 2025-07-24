@@ -16,6 +16,7 @@ done < /etc/passwd
 
 if [ ${#EXPIRED_USERS[@]} -eq 0 ]; then
   gum style --foreground 1 "No expired accounts found."
+  echo -e
   gum confirm "Return to menu?" && menu
 fi
 
@@ -25,14 +26,16 @@ echo -e
 user=$(printf "%s\n" "${EXPIRED_USERS[@]}" | gum choose --height=10 --header="Use SPACE or X to select")
 if [ -z "$user" ]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
-  exit 1
+  echo -e
+  gum confirm "Return to menu?" && menu
 fi
 
 echo -ne "\e[38;5;212m📅 Enter number of days to extend (e.g. 7):\e[0m "
 read -r days
 if [[ ! "$days" =~ ^[0-9]+$ ]]; then
   gum style --foreground 1 "Invalid number of days."
-  exit 1
+  echo -e
+  gum confirm "Return to menu?" && menu
 fi
 
 expire_date=$(date -u -d "+$days days" +%Y-%m-%d)
@@ -49,4 +52,5 @@ gum format --theme dracula --type markdown <<EOF
 **⏳ Expires On**  : \`$expire_disp\`
 EOF
 
+echo -e
 gum confirm "Return to menu?" && menu

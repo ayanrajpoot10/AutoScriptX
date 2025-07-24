@@ -17,13 +17,15 @@ done <<< "$users"
 
 if [[ ${#entries[@]} -eq 0 ]]; then
   gum style --foreground 1 "No accounts found."
+  echo -e
   gum confirm "Return to menu?" && menu
 fi
 
 selected=$(printf "%s\n" "${entries[@]}" | gum choose --height 20 --no-limit)
 if [[ -z "$selected" ]]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
-  exit 1
+  echo -e
+  gum confirm "Return to menu?" && menu
 fi
 
 user=$(echo "$selected" | awk '{print $2}')
@@ -43,4 +45,5 @@ else
   fi
 fi
 
+echo -e
 gum confirm "Return to menu?" && menu

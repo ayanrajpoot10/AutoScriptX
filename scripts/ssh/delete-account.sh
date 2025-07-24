@@ -19,13 +19,15 @@ gum format --theme dracula --type markdown <<< "# 🧨 Delete SSH Accounts"
 
 if [ -z "$USER_LIST" ]; then
   gum style --foreground 1 "No SSH Account available to delete."
+  echo -e
   gum confirm "Return to menu?" && menu
 fi
 echo -e
 SEL=$(echo -e "$USER_LIST" | gum choose --height=15 --no-limit --header="Use SPACE or X to select")
 if [ -z "$SEL" ]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
-  exit 1
+  echo -e
+  gum confirm "Return to menu?" && menu
 fi
 
 gum confirm "Delete selected accounts?" || { gum format --type markdown <<< "**❎ Cancelled.**"; exit 0; }

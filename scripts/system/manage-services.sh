@@ -31,8 +31,9 @@ echo
 selected_services=$(printf "%s\n" "${!services[@]}" | gum choose --no-limit --height=12 --header="Use SPACE or X to select")
 
 if [[ -z "$selected_services" ]]; then
-  gum style --foreground 1 "No service selected. Exiting."
-  exit 0
+  gum style --foreground 1 "No service selected."
+  echo -e
+  gum confirm "Return to menu?" && menu
 fi
 
 action=$(gum choose "start" "stop" "restart" --header="What do you want to do with selected service(s)?")
@@ -45,4 +46,5 @@ while IFS= read -r service; do
   fi
 done <<< "$selected_services"
 
+echo -e
 gum confirm "Return to menu?" && menu

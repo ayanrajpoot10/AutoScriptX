@@ -6,8 +6,9 @@ echo -ne "\e[38;5;212m🌍 Domain:\e[0m "
 read -r domain
 
 if [[ -z "$domain" ]]; then
-  gum style --foreground 1 "No domain entered. Exiting."
-  exit 1
+  gum style --foreground 1 "No domain entered."
+  echo -e
+  gum confirm "Return to menu?" && menu
 fi
 
 echo "$domain" > /etc/AutoScriptX/domain
@@ -24,10 +25,11 @@ echo -e "\e[38;5;220m🔑 Issuing SSL for $domain...\e[0m"
     --fullchainpath /etc/AutoScriptX/cert.crt \
     --keypath /etc/AutoScriptX/cert.key --ecc >/dev/null 2>&1
 
-[[ $? -ne 0 ]] && gum style --foreground 1 " SSL certificate issue failed." && exit 1
+[[ $? -ne 0 ]] && gum style --foreground 1 "SSL certificate issue failed." && exit 1
 
 systemctl restart nginx >/dev/null 2>&1
 
 gum style --foreground 10 "🎉 Domain and SSL setup complete!"
 
+echo -e
 gum confirm "Return to menu?" && menu
