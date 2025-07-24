@@ -143,7 +143,7 @@ log_info "Setting up BadVPN..."
 wget -qO /usr/bin/badvpn-udpgw "$BASE_URL/bin/badvpn-udpgw" || log_error "Failed to download BadVPN."
 chmod +x /usr/bin/badvpn-udpgw
 wget -qO /etc/systemd/system/badvpn-udpgw@.service "$BASE_URL/service/systemd/badvpn-udpgw@.service" || log_error "Failed to download badvpn-udpgw@.service."
-for port in 7100 7200; do
+for port in 7200 7300; do
     systemctl enable --now badvpn-udpgw@${port}.service > /dev/null 2>&1 || log_warning "Failed to start badvpn-udpgw@${port}.service."
 done
 log_success "BadVPN set up."
