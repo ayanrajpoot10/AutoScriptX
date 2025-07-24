@@ -104,6 +104,7 @@ log_success "SSH-WebSocket service set up."
 
 
 log_info "Requesting SSL cert..."
+systemctl stop nginx > /dev/null 2>&1
 mkdir -p /root/.acme.sh
 curl -s https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh || log_error "Failed to download acme.sh."
 chmod +x /root/.acme.sh/acme.sh
