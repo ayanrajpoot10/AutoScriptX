@@ -52,7 +52,7 @@
 - **Scheduled Maintenance**: Automated cron jobs for rebooting and cleaning expired accounts.
 - **Modern & Interactive UI**: Features a user-friendly, interactive CLI menu for seamless VPS management.
  **High Performance WebSocket Proxy**: Handles high load more efficiently than other scripts by using a Go-based WebSocket proxy instead of Python.
- **SSHGuard Protection**: Protects your SSH service from brute-force attacks automatically.
+- **SSHGuard Protection**: Protects your SSH service from brute-force attacks automatically.
 
 ---
 
