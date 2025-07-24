@@ -2,13 +2,10 @@
 Description=Watch x-ui.db for changes and update Nginx locations
 After=network.target
 
+
 [Service]
 Type=simple
-ExecStart=/bin/bash -c '
-  DB_PATH="/etc/x-ui/x-ui.db";
-  while true; do
-    inotifywait -e close_write "$DB_PATH" && /usr/local/bin/xray-watcher.sh;
-  done'
+ExecStart=/usr/local/bin/xray-watcher.sh
 Restart=always
 RestartSec=2
 
