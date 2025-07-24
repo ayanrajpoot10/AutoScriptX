@@ -21,7 +21,7 @@ if [[ ${#entries[@]} -eq 0 ]]; then
   gum confirm "Return to menu?" && menu
 fi
 
-selected=$(printf "%s\n" "${entries[@]}" | gum choose --height 20 --no-limit)
+selected=$(printf "%s\n" "${entries[@]}" | gum choose --height 20 --no-limit --header="Use SPACE or X to select")
 if [[ -z "$selected" ]]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
   echo -e
