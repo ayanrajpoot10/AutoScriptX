@@ -1,5 +1,7 @@
 #!/bin/bash
 
+LOCATION_DIR="/etc/nginx/locations"
+mkdir -p "$LOCATION_DIR"
 
 LOCATION_PATH="$1"
 PORT="$2"
