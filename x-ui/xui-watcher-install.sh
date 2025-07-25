@@ -17,10 +17,15 @@ wget -O /usr/bin/add-location.sh "$BASE_URL/add-location.sh"
 wget -O /usr/bin/xui-watcher.sh "$BASE_URL/xui-watcher.sh"
 chmod +x /usr/bin/add-location.sh /usr/bin/xui-watcher.sh
 
+echo "Downloading and installing systemd service..."
+wget -O /etc/systemd/system/xui-watcher.service "$BASE_URL/xui-watcher.service"
+
 mkdir -p /etc/nginx/locations
 mkdir -p /etc/AutoScriptX
 touch /etc/AutoScriptX/xray_paths.txt
 
 systemctl daemon-reload
+systemctl enable xui-watcher.service
+systemctl restart xui-watcher.service
 
-echo "Installation Complete"
+echo "Installation complete. xui-watcher service is running."
