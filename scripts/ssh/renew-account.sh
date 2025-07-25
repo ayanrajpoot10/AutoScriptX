@@ -14,13 +14,13 @@ while IFS=: read -r user _ uid _ _ _ _; do
   fi
 done < /etc/passwd
 
+gum format --theme dracula --type markdown "# 🔄 Renew Expired Accounts"
+
 if [ ${#EXPIRED_USERS[@]} -eq 0 ]; then
   gum style --foreground 1 "No expired accounts found."
   echo -e
   gum confirm "Return to menu?" && menu
 fi
-
-gum format --theme dracula --type markdown "# 🔄 Renew Expired Accounts"
 
 echo -e
 user=$(printf "%s\n" "${EXPIRED_USERS[@]}" | gum choose --height=10 --header="Use SPACE or X to select")
