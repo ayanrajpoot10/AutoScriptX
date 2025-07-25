@@ -90,7 +90,7 @@ chmod 644 /etc/default/dropbear
 wget -qO /etc/AutoScriptX/banner "$BASE_URL/config/banner.conf" || log_warning "Failed to download Dropbear banner."
 chmod 644 /etc/AutoScriptX/banner
 echo -e "/bin/false\n/usr/sbin/nologin" >> /etc/shells
-/etc/init.d/dropbear restart > /dev/null 2>&1 || log_warning "Failed to restart Dropbear."
+systemctl restart dropbear > /dev/null 2>&1 || log_warning "Failed to restart Dropbear."
 log_success "Dropbear configured."
 
 
