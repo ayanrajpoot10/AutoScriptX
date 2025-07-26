@@ -83,13 +83,13 @@ echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.d/99-disable-ipv6.c
 sysctl --system > /dev/null 2>&1 || log_warning "Failed to reload sysctl settings."
 log_success "IPv6 disabled."
 
-
 log_info "Configuring Dropbear..."
 wget -qO /etc/default/dropbear "$BASE_URL/config/dropbear.conf" || log_error "Failed to download dropbear.conf."
 chmod 644 /etc/default/dropbear
 wget -qO /etc/AutoScriptX/banner "$BASE_URL/config/banner.conf" || log_warning "Failed to download Dropbear banner."
 chmod 644 /etc/AutoScriptX/banner
 echo -e "/bin/false\n/usr/sbin/nologin" >> /etc/shells
+systemctl daemon-reload > /dev/null 2>&1
 systemctl restart dropbear > /dev/null 2>&1 || log_warning "Failed to restart Dropbear."
 log_success "Dropbear configured."
 
