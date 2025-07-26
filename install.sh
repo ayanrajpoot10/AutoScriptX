@@ -1,19 +1,19 @@
 #!/bin/bash
 
 
-GREEN="\033[0;32m"
-BLUE="\033[0;34m"
-RED="\033[0;31m"
-YELLOW="\033[1;33m"
-NC="\033[0m"
+green="\033[0;32m"
+blue="\033[0;34m"
+red="\033[0;31m"
+yellow="\033[1;33m"
+nc="\033[0m"
 
 BASE_URL="https://raw.githubusercontent.com/ayanrajpoot10/AutoScriptX/master"
 
 
-log_info()    { echo -e "${BLUE}[ Info    ]${NC} $1"; }
-log_success() { echo -e "${GREEN}[ Success ]${NC} $1"; }
-log_error()   { echo -e "${RED}[ Error   ]${NC} $1"; }
-log_warning() { echo -e "${YELLOW}[ Warning ]${NC} $1"; }
+log_info()    { echo -e "${blue}[ Info    ]${nc} $1"; }
+log_success() { echo -e "${green}[ Success ]${nc} $1"; }
+log_error()   { echo -e "${red}[ Error   ]${nc} $1"; }
+log_warning() { echo -e "${yellow}[ Warning ]${nc} $1"; }
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -217,4 +217,4 @@ done
 
 
 log_success "Installation complete."
-log_success "Run '${GREEN}autoscriptx${NC}' or '${GREEN}asx${NC}' to start."
+log_success "Run '${green}autoscriptx${nc}' or '${green}asx${nc}' to start."
