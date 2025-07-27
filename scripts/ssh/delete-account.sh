@@ -22,7 +22,7 @@ if [ -z "$USER_LIST" ]; then
   echo -e
   gum confirm "Return to menu?" && menu
 fi
-echo -e
+
 SEL=$(echo -e "$USER_LIST" | gum choose --height=15 --no-limit --header="Use SPACE or X to select")
 if [ -z "$SEL" ]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"

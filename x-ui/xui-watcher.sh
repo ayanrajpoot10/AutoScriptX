@@ -5,9 +5,11 @@ STATE_FILE="/etc/AutoScriptX/xray_paths.txt"
 LOCATION_DIR="/etc/nginx/locations"
 ADD_SCRIPT="/usr/bin/add-location.sh"
 
+
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
 mkdir -p "$LOCATION_DIR"
+
 
 process_db() {
   local current=""
@@ -59,6 +61,7 @@ process_db() {
 
   rm -f "$OLD"
 }
+
 
 while true; do
   inotifywait -qq -e modify,close_write,attrib,move_self "$DB_PATH"
