@@ -97,6 +97,10 @@ log_success "Dropbear configured."
 
 
 log_info "Setting up SSH-WebSocket service..."
+
+# Stop ws-proxy service and remove old binary before reinstall
+systemctl stop ws-proxy.service > /dev/null 2>&1 || true
+rm -f /usr/local/bin/ws-proxy
 wget -O /usr/local/bin/ws-proxy "$BASE_URL/bin/ws-proxy" > /dev/null 2>&1 && chmod +x /usr/local/bin/ws-proxy || log_warning "Failed to install websocket proxy"
 wget -O /etc/systemd/system/ws-proxy.service "$BASE_URL/service/systemd/ws-proxy.service" > /dev/null 2>&1 && chmod +x /etc/systemd/system/ws-proxy.service || log_warning "Failed to install websocket proxy service"
 systemctl daemon-reload > /dev/null 2>&1
@@ -106,7 +110,11 @@ log_success "SSH-WebSocket service set up."
 
 
 log_info "Requesting SSL cert..."
+
+# Clean up previous certs and acme.sh install for idempotency
 systemctl stop nginx > /dev/null 2>&1
+rm -rf /root/.acme.sh
+rm -f /etc/AutoScriptX/cert.crt /etc/AutoScriptX/cert.key
 mkdir -p /root/.acme.sh
 curl -s https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh || log_error "Failed to download acme.sh."
 chmod +x /root/.acme.sh/acme.sh
@@ -143,11 +151,18 @@ log_success "Nginx set up."
 
 
 log_info "Setting up BadVPN..."
+
+# Stop all running badvpn-udpgw services and kill processes before replacing binary
+for port in 7200 7300; do
+  systemctl stop badvpn-udpgw@${port}.service > /dev/null 2>&1 || true
+done
+pkill -f badvpn-udpgw || true
+rm -f /usr/bin/badvpn-udpgw
 wget -qO /usr/bin/badvpn-udpgw "$BASE_URL/bin/badvpn-udpgw" || log_error "Failed to download BadVPN."
 chmod +x /usr/bin/badvpn-udpgw
 wget -qO /etc/systemd/system/badvpn-udpgw@.service "$BASE_URL/service/systemd/badvpn-udpgw@.service" || log_error "Failed to download badvpn-udpgw@.service."
 for port in 7200 7300; do
-    systemctl enable --now badvpn-udpgw@${port}.service > /dev/null 2>&1 || log_warning "Failed to start badvpn-udpgw@${port}.service."
+      systemctl enable --now badvpn-udpgw@${port}.service > /dev/null 2>&1 || log_warning "Failed to start badvpn-udpgw@${port}.service."
 done
 log_success "BadVPN set up."
 
