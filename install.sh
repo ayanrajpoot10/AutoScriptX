@@ -185,7 +185,7 @@ systemctl restart sshguard > /dev/null 2>&1 || log_warning "Failed to restart ss
 log_success "SSHGuard configured."
 
 
-log_info "Applying firewall rules to block torrent traffic..."
+log_info "Applying firewall rules..."
 iptables_rules=(
   "get_peers" "announce_peer" "find_node" "BitTorrent"
   "BitTorrent protocol" "peer_id=" ".torrent"
@@ -196,7 +196,7 @@ for s in "${iptables_rules[@]}"; do
 done
 iptables-save > /etc/iptables.up.rules
 netfilter-persistent save > /dev/null 2>&1 && netfilter-persistent reload > /dev/null 2>&1
-log_success "Firewall rules applied to block torrent traffic."
+log_success "Firewall rules applied."
 
 
 log_info "Installing scripts..."
