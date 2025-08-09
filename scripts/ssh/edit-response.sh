@@ -14,6 +14,7 @@ if [ -z "$new_res" ] || [ "$new_res" = "$old_res" ]; then
     gum style --foreground 1 "No changes detected. Response not updated."
     echo -e
     gum confirm "Return to menu?" && menu
+    exit 0
 fi
 
 escaped_res=$(printf '%s\n' "$new_res" | sed 's/[&/\]/\\&/g' | tr '\n' ' ' | sed 's/ *$//')

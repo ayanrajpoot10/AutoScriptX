@@ -21,6 +21,7 @@ if [ -z "$USER_LIST" ]; then
   gum style --foreground 1 "No SSH Account available to delete."
   echo -e
   gum confirm "Return to menu?" && menu
+  exit 1
 fi
 
 SEL=$(echo -e "$USER_LIST" | gum choose --height=15 --no-limit --header="Use SPACE or X to select")
@@ -28,6 +29,7 @@ if [ -z "$SEL" ]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
   echo -e
   gum confirm "Return to menu?" && menu
+  exit 0
 fi
 
 gum confirm "Delete selected accounts?" || { gum format --type markdown <<< "**❎ Cancelled.**"; exit 0; }

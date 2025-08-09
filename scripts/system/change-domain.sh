@@ -9,6 +9,7 @@ if [[ -z "$domain" ]]; then
   gum style --foreground 1 "No domain entered."
   echo -e
   gum confirm "Return to menu?" && menu
+  exit 0
 fi
 
 echo "$domain" > /etc/AutoScriptX/domain

@@ -34,6 +34,7 @@ if [[ -z "$selected_services" ]]; then
   gum style --foreground 1 "No service selected."
   echo -e
   gum confirm "Return to menu?" && menu
+  exit 0
 fi
 
 action=$(gum choose "start" "stop" "restart" --header="What do you want to do with selected service(s)?")

@@ -20,6 +20,7 @@ if [ ${#EXPIRED_USERS[@]} -eq 0 ]; then
   gum style --foreground 1 "No expired accounts found."
   echo -e
   gum confirm "Return to menu?" && menu
+  exit 0
 fi
 
 echo -e

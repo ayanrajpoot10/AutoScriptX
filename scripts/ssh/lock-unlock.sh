@@ -26,6 +26,7 @@ if [[ -z "$selected" ]]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
   echo -e
   gum confirm "Return to menu?" && menu
+  exit 0
 fi
 
 user=$(echo "$selected" | awk '{print $2}')
