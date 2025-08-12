@@ -24,6 +24,7 @@ fi
 
 
 localip=$(hostname -I | cut -d ' ' -f1)
+public_ip=$(curl -s ifconfig.me)
 hostname=$(hostname)
 domain_from_etc=$(grep -w "$hostname" /etc/hosts | awk '{print $2}')
 [ "$hostname" != "$domain_from_etc" ] && echo "$localip $hostname" >> /etc/hosts
@@ -57,12 +58,23 @@ log_success "System updated."
 
 
 log_info "Installing packages..."
+
 apt install -y \
   netfilter-persistent screen curl jq bzip2 gzip vnstat coreutils rsyslog \
   zip unzip net-tools nano lsof shc gnupg dos2unix dirmngr bc \
-  stunnel4 nginx dropbear socat xz-utils sshguard > /dev/null 2>&1
+  stunnel4 nginx dropbear socat xz-utils sshguard squid > /dev/null 2>&1
 if [[ $? -ne 0 ]]; then log_error "Failed to install one or more packages."; exit 1; fi
 log_success "Packages installed."
+
+
+log_info "Setting up Squid proxy..."
+wget -qO /etc/squid/squid.conf "$BASE_URL/config/squid.conf" || log_error "Failed to download squid.conf."
+sed -i "s/IP/$public_ip/g" /etc/squid/squid.conf
+chmod 644 /etc/squid/squid.conf
+systemctl daemon-reload > /dev/null 2>&1
+systemctl enable squid > /dev/null 2>&1
+systemctl restart squid > /dev/null 2>&1 || log_error "Failed to restart Squid."
+log_success "Squid proxy set up."
 
 
 log_info "Installing gum..."
