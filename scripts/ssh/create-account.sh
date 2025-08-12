@@ -31,10 +31,10 @@ gum format --theme dracula --type markdown <<EOF
 
 # 📦 Ports
 
-- OpenSSH     : 22 
 - SSH WS      : 80
-- SSH SSL WS  : 443 
-- SSL/TLS     : 443 
+- SSH SSL WS  : 443
+- SSL/TLS     : 443
+- SQUID       : 8080
 - UDPGW       : 7200,7300
 
 # 🧪 Payloads
