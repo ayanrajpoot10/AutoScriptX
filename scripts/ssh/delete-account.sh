@@ -32,7 +32,12 @@ if [ -z "$SEL" ]; then
   exit 0
 fi
 
-gum confirm "Delete selected accounts?" || { gum format --type markdown <<< "**❎ Cancelled.**"; exit 0; }
+if ! gum confirm "Delete selected accounts?"; then
+  gum format --type markdown <<< "**❎ Cancelled.**"
+  echo -e
+  gum confirm "Return to menu?" && menu
+  exit 0
+fi
 
 COUNT=0
 while IFS= read -r u; do
