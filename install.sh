@@ -60,7 +60,7 @@ log_success "System updated."
 log_info "Installing packages..."
 
 apt install -y \
-  netfilter-persistent screen curl jq bzip2 gzip vnstat coreutils rsyslog \
+  netfilter-persistent iptables-persistent screen curl jq bzip2 gzip vnstat coreutils rsyslog \
   zip unzip net-tools nano lsof shc gnupg dos2unix dirmngr bc \
   stunnel4 nginx dropbear socat xz-utils sshguard squid > /dev/null 2>&1
 if [[ $? -ne 0 ]]; then log_error "Failed to install one or more packages."; exit 1; fi
@@ -209,6 +209,20 @@ done
 iptables-save > /etc/iptables.up.rules
 netfilter-persistent save > /dev/null 2>&1 && netfilter-persistent reload > /dev/null 2>&1
 log_success "Firewall rules applied."
+
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+
+if grep -q "--dport 22" /etc/iptables/rules.v4; then
+  sed -i "/--dport 22 -j ACCEPT/a \\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT" /etc/iptables/rules.v4
+else
+  echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT" >> /etc/iptables/rules.v4
+  echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT" >> /etc/iptables/rules.v4
+  echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT" >> /etc/iptables/rules.v4
+  echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT" >> /etc/iptables/rules.v4
+fi
+
+netfilter-persistent save > /dev/null 2>&1 || log_warning "Failed to save iptables rules."
 
 
 log_info "Installing scripts..."
