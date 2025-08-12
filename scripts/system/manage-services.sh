@@ -16,6 +16,7 @@ declare -A services=(
   [ws-proxy.service]="WebSocket Proxy"
   [badvpn-udpgw@7200.service]="UDPGW (7200)"
   [badvpn-udpgw@7300.service]="UDPGW (7300)"
+  [squid]="Squid"
 )
 
 gum format --theme dracula --type markdown "# ⚙️ Service Status"
