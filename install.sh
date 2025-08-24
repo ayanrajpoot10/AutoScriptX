@@ -275,9 +275,9 @@ apply_firewall_rules() {
 install_scripts() {
     log_info "Installing scripts..."
     declare -A script_dirs=(
-      [menu]="menu.sh"
+      [menu]="menu.sh slowdns-menu.sh"
       [ssh]="create-account.sh delete-account.sh edit-banner.sh edit-response.sh lock-unlock.sh renew-account.sh"
-      [system]="change-domain.sh manage-services.sh system-info.sh clean-expired-accounts.sh"
+      [system]="change-domain.sh manage-services.sh system-info.sh clean-expired-accounts.sh setup-slowdns.sh slowdns-status.sh help.sh"
     )
     for dir in "${!script_dirs[@]}"; do
       for s in ${script_dirs[$dir]}; do
@@ -286,6 +286,11 @@ install_scripts() {
         chmod +x "/usr/bin/$base"
       done
     done
+    
+    # Install uninstall script to AutoScriptX directory
+    wget -qO /etc/AutoScriptX/uninstall.sh "$BASE_URL/uninstall.sh" > /dev/null 2>&1 || log_warning "Failed to download uninstall.sh."
+    chmod +x /etc/AutoScriptX/uninstall.sh
+    
     log_success "Scripts installed."
 }
 

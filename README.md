@@ -45,6 +45,7 @@
 
 - **Automated Installation**: One-command setup for all dependencies and configurations.
 - **SSH & WebSocket Management**: Create, renew, lock/unlock, and delete SSH accounts with WebSocket and SSL support.
+- **SlowDNS Support**: DNS tunneling for SSH connections, perfect for bypassing network restrictions.
 - **Service Control**: Start, stop, and restart core services (SSH, Nginx, Dropbear, Stunnel, WebSocket Proxy, etc.).
 - **Domain & SSL Automation**: Easily set or change your VPS domain and auto-issue SSL certificates.
 - **System Information**: View detailed system, network, and service status.
@@ -92,6 +93,7 @@ asx
 - Create, delete, renew, lock/unlock SSH accounts
 - Edit SSH banner and HTTP 101 response
 - Change domain and auto-issue SSL
+- Setup and manage SlowDNS (DNS tunneling)
 - Manage services (start/stop/restart)
 - View system information
 

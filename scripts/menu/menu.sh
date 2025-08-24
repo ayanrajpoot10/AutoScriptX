@@ -41,7 +41,11 @@ opt=$(gum choose --limit=1 --header "  Choose" \
   "7. Change Domain" \
   "8. Manage Services" \
   "9. System Info" \
-  "x. Exit")
+  "x. Exit" \
+  "10. SlowDNS Menu" \
+  "11. X-UI Menu" \
+  "12. Uninstall" \
+  "xx. Exit")
 
 clear
 case "$opt" in
@@ -55,4 +59,9 @@ case "$opt" in
   "8. Manage Services") manage-services ;;
   "9. System Info") system-info ;;
   "x. Exit") exit ;;
+  "10. SlowDNS Menu") slowdns-menu ;;
+  "11. X-UI Menu") xui-menu ;;
+  "12. Uninstall") 
+    gum confirm "Are you sure you want to uninstall AutoScriptX? This action cannot be undone." && bash /etc/AutoScriptX/uninstall.sh ;;
+  "xx. Exit") exit ;;
 esac
