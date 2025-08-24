@@ -275,7 +275,7 @@ apply_firewall_rules() {
 install_scripts() {
     log_info "Installing scripts..."
     declare -A script_dirs=(
-      [menu]="menu.sh slowdns-menu.sh"
+      [menu]="menu.sh slowdns-menu.sh xui-menu.sh"
       [ssh]="create-account.sh delete-account.sh edit-banner.sh edit-response.sh lock-unlock.sh renew-account.sh"
       [system]="change-domain.sh manage-services.sh system-info.sh clean-expired-accounts.sh setup-slowdns.sh slowdns-status.sh"
     )
