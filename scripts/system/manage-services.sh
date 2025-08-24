@@ -17,6 +17,8 @@ declare -A services=(
   [badvpn-udpgw@7200.service]="UDPGW (7200)"
   [badvpn-udpgw@7300.service]="UDPGW (7300)"
   [squid]="Squid"
+  [x-ui.service]="X-UI"
+  [xui-watcher.service]="XUI Watcher"
 )
 
 gum format --theme dracula --type markdown "# ⚙️ Service Status"
