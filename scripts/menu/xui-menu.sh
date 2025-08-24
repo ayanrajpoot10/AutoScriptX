@@ -90,7 +90,7 @@ main_xui_menu() {
 - **Web Path**        : $path_display
 - **Access URL**      : $access_url
 
-## 🚀 X-UI Menu
+# 🚀 X-UI Menu
 EOF
 
         if check_xui_status; then
@@ -272,7 +272,7 @@ EOF
                 echo ""
                 read -p "Press Enter to continue..."
                 ;;
-            "←. Back")
+            "←. Back" | "←.  Back")
                 return 0
                 ;;
             *)
