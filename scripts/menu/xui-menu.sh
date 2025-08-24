@@ -273,7 +273,7 @@ EOF
                 read -p "Press Enter to continue..."
                 ;;
             "←. Back" | "←.  Back")
-                return 0
+                asx
                 ;;
             *)
                 echo -e "${red}[ Error   ]${nc} Invalid option selected."

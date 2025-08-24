@@ -69,11 +69,11 @@ EOF
               "5. View Server Logs" \
               "6. Reinstall SlowDNS Server" \
               "7. Uninstall SlowDNS Server" \
-              "←. Back to Main Menu")
+              "←. Back")
         else
             opt=$(gum choose --limit=1 --header "  Choose Option" \
               "1. Install SlowDNS Server" \
-              "←. Back to Main Menu")
+              "←. Back")
         fi
 
         clear
@@ -170,8 +170,8 @@ EOF
                 echo ""
                 read -p "Press Enter to continue..."
                 ;;
-            "←. Back to Main Menu")
-                return 0
+            "←. Back")
+                asx
                 ;;
             *)
                 echo -e "${red}[ Error   ]${nc} Invalid option selected."

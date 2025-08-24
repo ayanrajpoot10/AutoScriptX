@@ -36,7 +36,7 @@ selected_services=$(printf "%s\n" "${!services[@]}" | gum choose --no-limit --he
 if [[ -z "$selected_services" ]]; then
   gum style --foreground 1 "No service selected."
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
   exit 0
 fi
 
@@ -51,4 +51,4 @@ while IFS= read -r service; do
 done <<< "$selected_services"
 
 echo -e
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx

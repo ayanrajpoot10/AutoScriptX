@@ -54,4 +54,4 @@ Upgrade: websocket[crlf][crlf]
 \`\`\`
 EOF
 
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx

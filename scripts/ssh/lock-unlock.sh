@@ -18,14 +18,14 @@ done <<< "$users"
 if [[ ${#entries[@]} -eq 0 ]]; then
   gum style --foreground 1 "No accounts found."
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
 fi
 
 selected=$(printf "%s\n" "${entries[@]}" | gum choose --height 20 --no-limit --header="Use SPACE or X to select")
 if [[ -z "$selected" ]]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
   exit 0
 fi
 
@@ -47,4 +47,4 @@ else
 fi
 
 echo -e
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx

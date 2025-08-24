@@ -8,7 +8,7 @@ read -r domain
 if [[ -z "$domain" ]]; then
   gum style --foreground 1 "No domain entered."
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
   exit 0
 fi
 
@@ -33,4 +33,4 @@ systemctl restart nginx >/dev/null 2>&1
 gum style --foreground 10 "🎉 Domain and SSL setup complete!"
 
 echo -e
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx

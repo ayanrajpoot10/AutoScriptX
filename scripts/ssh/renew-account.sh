@@ -19,7 +19,7 @@ gum format --theme dracula --type markdown "# 🔄 Renew Expired Accounts"
 if [ ${#EXPIRED_USERS[@]} -eq 0 ]; then
   gum style --foreground 1 "No expired accounts found."
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
   exit 0
 fi
 
@@ -28,7 +28,7 @@ user=$(printf "%s\n" "${EXPIRED_USERS[@]}" | gum choose --height=10 --header="Us
 if [ -z "$user" ]; then
   gum style --foreground 1 "No accounts selected. Use SPACE or X to select"
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
 fi
 
 echo -ne "\e[38;5;212m📅 Enter number of days to extend (e.g. 7):\e[0m "
@@ -36,7 +36,7 @@ read -r days
 if [[ ! "$days" =~ ^[0-9]+$ ]]; then
   gum style --foreground 1 "Invalid number of days."
   echo -e
-  gum confirm "Return to menu?" && menu
+  gum confirm "Return to menu?" && asx
 fi
 
 expire_date=$(date -u -d "+$days days" +%Y-%m-%d)
@@ -54,4 +54,4 @@ gum format --theme dracula --type markdown <<EOF
 EOF
 
 echo -e
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx

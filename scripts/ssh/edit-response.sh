@@ -13,7 +13,7 @@ new_res=$(echo "$old_res" | gum write --placeholder "Write message to show after
 if [ -z "$new_res" ] || [ "$new_res" = "$old_res" ]; then
     gum style --foreground 1 "No changes detected. Response not updated."
     echo -e
-    gum confirm "Return to menu?" && menu
+    gum confirm "Return to menu?" && asx
     exit 0
 fi
 
@@ -28,4 +28,4 @@ systemctl restart ws-proxy.service
 gum style --foreground 212 "✅ 101 Response Updated:"
 
 echo -e
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx

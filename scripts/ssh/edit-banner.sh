@@ -27,4 +27,4 @@ else
 fi
 
 echo -e
-gum confirm "Return to menu?" && menu
+gum confirm "Return to menu?" && asx
