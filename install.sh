@@ -277,7 +277,7 @@ install_scripts() {
     declare -A script_dirs=(
       [menu]="menu.sh slowdns-menu.sh"
       [ssh]="create-account.sh delete-account.sh edit-banner.sh edit-response.sh lock-unlock.sh renew-account.sh"
-      [system]="change-domain.sh manage-services.sh system-info.sh clean-expired-accounts.sh setup-slowdns.sh slowdns-status.sh help.sh"
+      [system]="change-domain.sh manage-services.sh system-info.sh clean-expired-accounts.sh setup-slowdns.sh slowdns-status.sh"
     )
     for dir in "${!script_dirs[@]}"; do
       for s in ${script_dirs[$dir]}; do
