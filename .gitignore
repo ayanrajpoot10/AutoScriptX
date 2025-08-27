@@ -1,2 +1,4 @@
 .github/chatmodes/
 /trash
+/webpanel/web/node_modules
+/webpanel/web/dist
